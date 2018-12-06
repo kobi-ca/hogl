@@ -57,6 +57,15 @@ static const char *sect_names[] = {
 	0,
 };
 
+static const char *sect_names_no_null[] = {
+		"DEBUG",
+		"INFO",
+		"ERROR",
+		"EXTRA:DEBUG",
+		"EXTRA:INFO",
+		"EXTRA:ERROR"
+};
+
 BOOST_AUTO_TEST_CASE(basic)
 {
 	hogl::area area("DEF", sect_names);
@@ -64,6 +73,15 @@ BOOST_AUTO_TEST_CASE(basic)
 	BOOST_REQUIRE (area.name() == std::string("DEF"));
 	BOOST_REQUIRE (area.count() == NSECT);
 }
+
+BOOST_AUTO_TEST_CASE(basic_no_null)
+{
+	hogl::area area("DEF", sect_names_no_null);
+
+	BOOST_REQUIRE (area.name() == std::string("DEF"));
+	BOOST_REQUIRE (area.count() == NSECT);
+}
+
 
 BOOST_AUTO_TEST_CASE(mask_ops)
 {

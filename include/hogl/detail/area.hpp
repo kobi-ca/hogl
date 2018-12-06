@@ -39,6 +39,10 @@
 
 namespace hogl {
 
+    static const char *default_section_names[] = {
+            "INFO", "WARN", "ERROR", "FATAL", "DEBUG", "TRACE", 0
+    };
+
 /**
  * Logging area.
  * Defines a logging area with sections. Sections are identified either 
@@ -75,7 +79,46 @@ public:
  	 * @param section pointer to the array of section names. Must be null terminated.
  	 * If section names pointer is null the area will contain default sections. 
  	 */
-	area(const char *name, const char **section = 0);
+    template <typename T>
+    area(const char *name,
+         const typename std::enable_if<std::is_pointer<T>::value>::type *section = 0) :
+	_magic(hogl::area_magic),
+	_name(strdup(name))
+    {
+	    if (section) {
+		    // Count number of sections and resize the bitmap
+		    unsigned int i;
+		    for (i=0; section[i]; ++i) /* noop */;
+		    _bitmap.resize(i);
+
+		    _section = new const char* [_bitmap.size()];
+		    for (i=0; i < _bitmap.size(); ++i)
+			    _section[i] = strdup(section[i]);
+	    } else {
+    		_section = default_section_names;
+	    	_bitmap.resize(6);
+	    }
+
+	    _bitmap.reset();
+
+	    // dprint("created area %p. name %s size %u", this, _name, _bitmap.size());
+    }
+
+ 	template <int size>
+ 	area(const char *name, const char *section[size]) :
+            _magic(hogl::area_magic),
+            _name(strdup(name))
+    {
+        // Count number of sections and resize the bitmap
+        unsigned int i = size;
+        _bitmap.resize(i);
+        _section = new const char* [_bitmap.size()];
+        for (i=0; i < _bitmap.size(); ++i)
+            _section[i] = strdup(section[i]);
+        _bitmap.reset();
+        //dprint("created area %p. name %s size %u", this, _name, _bitmap.size());
+    }
+
 	~area();
 
 	/**

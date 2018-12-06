@@ -39,6 +39,12 @@ namespace hogl {
 
 extern engine *default_engine;
 
+template <int size>
+static inline area *add_area(const char *name, const char *sections[size])
+{
+	return default_engine->add_area(name, sections);
+}
+
 /**
  * Add a new area to the default engine
  * @param name area name

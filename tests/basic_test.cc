@@ -33,6 +33,8 @@
 #include <time.h>
 #include <assert.h>
 
+#include <fmt/format.h>
+
 #include "hogl/format-basic.hpp"
 #include "hogl/format-raw.hpp"
 #include "hogl/output-stdout.hpp"
@@ -379,6 +381,8 @@ int main(int argc, char *argv[])
 	hogl::mask logmask(".*", 0);
 
 	hogl::activate(*lo);
+
+	std::clog << fmt::format("hello world\n");
 
 	test_area = hogl::add_area("TEST-AREA", test_sect_names);
 

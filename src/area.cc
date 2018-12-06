@@ -43,32 +43,36 @@
 
 namespace hogl {
 
+    /*
 static const char *default_section_names[] = {
 	"INFO", "WARN", "ERROR", "FATAL", "DEBUG", "TRACE", 0
 };
 
-area::area(const char *name, const char **section) :
-	_magic(hogl::area_magic),
-	_name(strdup(name))
-{
-	if (section) {
-		// Count number of sections and resize the bitmap
-		unsigned int i;
-		for (i=0; section[i]; ++i) /* noop */;
-		_bitmap.resize(i);
+     */
 
-		_section = new const char* [_bitmap.size()];
-		for (i=0; i < _bitmap.size(); ++i)
-			_section[i] = strdup(section[i]);
-	} else {
-		_section = default_section_names;
-		_bitmap.resize(6);
-	}
+//area::area(const char *name, const char **section) :
+//	_magic(hogl::area_magic),
+//	_name(strdup(name))
+//{
+//	if (section) {
+//		// Count number of sections and resize the bitmap
+//		unsigned int i;
+//		for (i=0; section[i]; ++i) /* noop */;
+//		_bitmap.resize(i);
+//
+//		_section = new const char* [_bitmap.size()];
+//		for (i=0; i < _bitmap.size(); ++i)
+//			_section[i] = strdup(section[i]);
+//	} else {
+//		_section = default_section_names;
+//		_bitmap.resize(6);
+//	}
+//
+//	_bitmap.reset();
+//
+//	dprint("created area %p. name %s size %u", this, _name, _bitmap.size());
+//}
 
-	_bitmap.reset();
-
-	dprint("created area %p. name %s size %u", this, _name, _bitmap.size());	
-}
 
 area::~area()
 {
