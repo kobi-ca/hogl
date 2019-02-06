@@ -173,10 +173,12 @@ noinst_PROGRAMS = tests/disasm/test \
 
 plugin_LTLIBRARIES = tests/libfmt-plugin_test.la
 
+ICC_LD_FLAGS = /opt/intel/itac/2018.1.017/intel64/bin/rtlib/libimf.so /opt/intel/itac/2018.1.017/intel64/bin/rtlib/libintlc.so.5 /opt/intel/compilers_and_libraries_2018.1.163/linux/compiler/lib/intel64_lin/libirng.so /opt/intel/itac/2018.1.017/intel64/bin/rtlib/libsvml.so /opt/intel/compilers_and_libraries_2018.1.163/linux/compiler/lib/intel64_lin/libirng.so
+
 AM_CPPFLAGS = -I include $(BOOST_CPPFLAGS)
 AM_CXXFLAGS = -pthread
 AM_CFLAGS   = -pthread
-LDADD = src/libhogl.la $(HOGL_LIBS) $(BOOST_LDFLAGS) $(CODE_COVERAGE_LDFLAGS)
+LDADD = src/libhogl.la $(ICC_LD_FLAGS) $(HOGL_LIBS) $(BOOST_LDFLAGS) -lboost_regex $(CODE_COVERAGE_LDFLAGS)
 
 tests_args_test_SOURCES  = tests/args_test.cc 
 tests_area_test_SOURCES  = tests/area_test.cc
@@ -233,12 +235,12 @@ tools_hogl_recover_SOURCES  = \
 		tools/recovery-engine.hpp tools/recovery-engine.cc \
 		tools/recover.cc
 tools_hogl_recover_CPPFLAGS = -I include
-tools_hogl_recover_LDADD    = src/libhogl.la $(HOGL_LIBS) $(LIBS)
+tools_hogl_recover_LDADD    = src/libhogl.la $(ICC_LD_FLAGS) -lboost_regex $(HOGL_LIBS) $(LIBS)
 
 tools_hogl_cook_SOURCES  = \
 		tools/rdbuf.hpp tools/rdbuf.cc \
 		tools/raw-parser.hpp tools/raw-parser.cc \
 		tools/cook.cc
 tools_hogl_cook_CPPFLAGS = -I include
-tools_hogl_cook_LDADD    = src/libhogl.la $(HOGL_LIBS) $(LIBS)
+tools_hogl_cook_LDADD    = src/libhogl.la $(ICC_LD_FLAGS) -lboost_regex $(HOGL_LIBS) $(LIBS)
 endif

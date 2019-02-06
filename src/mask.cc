@@ -32,7 +32,7 @@
 #include <map>
 #include <string>
 #include <sstream>
-#include <regex>
+#include <boost/regex.hpp>
 
 #include "hogl/detail/mask.hpp"
 #include "hogl/detail/area.hpp"
@@ -47,11 +47,11 @@ namespace hogl {
 
 struct mask::data {
 	const std::string str;
-	const std::regex  area;
-	const std::regex  sect;
+	const boost::regex  area;
+	const boost::regex  sect;
 	bool  on;
 
-	data(const std::string& _str, const std::regex& _area, const std::regex& _sect, bool _on) :
+	data(const std::string& _str, const boost::regex& _area, const boost::regex& _sect, bool _on) :
 		str(_str), area(_area), sect(_sect), on(_on) { }
 };
 
@@ -78,18 +78,18 @@ void mask::add(const std::string &str)
 	if (sreg.empty()) sreg = ".*";
 
 	_list->push_back(mask::data(str,
-				std::regex(areg, std::regex::extended | std::regex::optimize),
-				std::regex(sreg, std::regex::extended | std::regex::optimize),
+				boost::regex(areg, boost::regex::extended | boost::regex::optimize),
+				boost::regex(sreg, boost::regex::extended | boost::regex::optimize),
 				on)
 			);
 }
 
-static void __apply(area &area, const std::regex &re, bool on)
+static void __apply(area &area, const boost::regex &re, bool on)
 {
 	unsigned int i;
 	for (i=0; i < area.size(); i++) {
 		const std::string str(area.section_name(i));
-		if (std::regex_match(str, re))
+		if (boost::regex_match(str, re))
 			area.set(i, on);
 	}
 }
@@ -99,7 +99,7 @@ void mask::apply(area &area) const
 	data_list::const_iterator it;
 	for (it=_list->begin(); it != _list->end(); ++it) {
 		const std::string str(area.name());
-		if (std::regex_match(str, it->area)) {
+		if (boost::regex_match(str, it->area)) {
 			dprint("applying mask %p to area %p [%s]", this, &area, area.name());
 			__apply(area, it->sect, it->on);
 		}
