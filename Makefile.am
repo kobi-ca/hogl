@@ -173,7 +173,7 @@ noinst_PROGRAMS = tests/disasm/test \
 
 plugin_LTLIBRARIES = tests/libfmt-plugin_test.la
 
-ICC_LD_FLAGS = /opt/intel/itac/2018.1.017/intel64/bin/rtlib/libimf.so /opt/intel/itac/2018.1.017/intel64/bin/rtlib/libintlc.so.5 /opt/intel/compilers_and_libraries_2018.1.163/linux/compiler/lib/intel64_lin/libirng.so /opt/intel/itac/2018.1.017/intel64/bin/rtlib/libsvml.so /opt/intel/compilers_and_libraries_2018.1.163/linux/compiler/lib/intel64_lin/libirng.so
+ICC_LD_FLAGS = /opt/intel/compilers_and_libraries_2018.1.163/linux/compiler/lib/intel64_lin/libirng.so /opt/intel/compilers_and_libraries_2018.1.163/linux/compiler/lib/intel64_lin/libirng.so
 
 AM_CPPFLAGS = -I include $(BOOST_CPPFLAGS)
 AM_CXXFLAGS = -pthread
