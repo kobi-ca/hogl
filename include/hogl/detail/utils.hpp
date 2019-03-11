@@ -29,6 +29,6 @@ namespace hogl
     
 // return non-zero on error
 // core_id < 0 would not do anything and just return 0
-int setaffinity(int core_id);
+int setaffinity(pthread_t thread_id, int core_id);
 
 } // hogl

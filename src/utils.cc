@@ -38,7 +38,7 @@
 namespace hogl
 {
 
-int setaffinity(int core_id) {
+int setaffinity(pthread_t thread_id, int core_id) {
    // Do nothing in case of core_id -1 or < 0
    if (core_id < 0) { return 0; }
    int num_cores = sysconf(_SC_NPROCESSORS_ONLN);
@@ -50,8 +50,7 @@ int setaffinity(int core_id) {
    CPU_SET(core_id, &cpuset);
 
    dprint("hogl::setaffinity core id is %d", core_id);
-   pthread_t current_thread = pthread_self();    
-   return pthread_setaffinity_np(current_thread, sizeof(cpu_set_t), &cpuset);
+   return pthread_setaffinity_np(thread_id, sizeof(cpu_set_t), &cpuset);
 }
 
 } // ns hogl
