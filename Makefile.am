@@ -157,6 +157,7 @@ TESTS = \
 	tests/ring_test \
 	tests/tso_test \
 	tests/engine_test \
+	tests/engine_cpu_core_test \
 	tests/basic_test \
 	tests/aux_engine_test \
 	tests/rawrec_test \
@@ -188,6 +189,7 @@ tests_mask_test_SOURCES  = tests/mask_test.cc
 tests_ring_test_SOURCES  = tests/ring_test.cc
 tests_tso_test_SOURCES   = tests/tso_test.cc
 tests_engine_test_SOURCES= tests/engine_test.cc
+tests_engine_cpu_core_test_SOURCES= tests/engine_cpu_core_test.cc
 tests_basic_test_SOURCES = tests/basic_test.cc
 tests_aux_engine_test_SOURCES = tests/aux_engine_test.cc
 tests_rawrec_test_SOURCES = tests/rawrec_test.cc
