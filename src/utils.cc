@@ -40,7 +40,6 @@ namespace hogl
 
 int setaffinity(pthread_t thread_id, int core_id) {
    // Do nothing in case of core_id -1 or < 0
-   if (core_id < 0) { return 0; }
    int num_cores = sysconf(_SC_NPROCESSORS_ONLN);
    if (core_id < 0 || core_id >= num_cores)
       return EINVAL;
