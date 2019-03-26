@@ -24,12 +24,14 @@
    OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include <stdint.h> // int64_t
-
+#include <stdint.h> // uint64_t
+#include <stdio.h> // stderr
 #include <sched.h>
 #include <unistd.h>
 #include <errno.h>
 #include <pthread.h>
+
+#include <climits>
 
 #ifdef HOGL_DEBUG
 #define dprint(fmt, args...) fprintf(stderr, "hogl: " fmt "\n", ##args)
@@ -40,19 +42,27 @@
 namespace hogl
 {
 
-int setaffinity(pthread_t thread_id, int64_t core_id) {
-   // Do nothing in case of core_id -1 or < 0
-   if (core_id < 0) { return 0; }
-   int64_t num_cores = sysconf(_SC_NPROCESSORS_ONLN);
-   if (core_id < 0 || core_id >= num_cores)
-      return EINVAL;
+cpu_set_t set_cpu_masks(cpu_set_t cpuset, uint64_t core_id_mask) {
+   dprint("hogl::setaffinity core mask %lu", core_id_mask);
+   int bit = sizeof(core_id_mask) * CHAR_BIT - 1;
+   while (bit >= 0) {
+      if (core_id_mask & (1UL << bit)) {
+         dprint("hogl::setaffinity core id is %d", bit);
+         CPU_SET(bit, &cpuset);
+      }
+      --bit;
+   }
+   return cpuset;
+}
 
+int setaffinity(pthread_t thread_id, uint64_t core_id_mask) {
    cpu_set_t cpuset;
    CPU_ZERO(&cpuset);
-   CPU_SET(core_id, &cpuset);
-
-   dprint("hogl::setaffinity core id is %d", core_id);
-   return pthread_setaffinity_np(thread_id, sizeof(cpu_set_t), &cpuset);
+   cpuset = set_cpu_masks(cpuset, core_id_mask);
+   if (CPU_COUNT(&cpuset)) {
+      return pthread_setaffinity_np(thread_id, sizeof(cpu_set_t), &cpuset);
+   }
+   return 0;
 }
 
 } // ns hogl

@@ -24,14 +24,49 @@
    OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include <stdint.h> // uint64_t
-#include <pthread.h>
+#include "hogl/detail/utils.hpp"
 
-namespace hogl
+#define BOOST_TEST_MODULE area_test 
+#include <boost/test/included/unit_test.hpp>
+
+namespace hogl {
+    cpu_set_t set_cpu_masks(cpu_set_t cpuset, uint64_t core_id_mask);
+}
+
+BOOST_AUTO_TEST_CASE(all_zero)
 {
-    
-// return non-zero on error
-// core_id < 0 would not do anything and just return 0
-int setaffinity(pthread_t thread_id, uint64_t core_id_mask);
+    printf("all_zero test\n");
+    pthread_t t = pthread_self();
+    uint64_t mask = 0;
+    int ret = hogl::setaffinity(t, mask);
+    if (ret) {
+        printf("ret is %d %s\n", ret, strerror(errno));
+    }
+    BOOST_ASSERT(ret == 0);
+}
 
-} // hogl
+BOOST_AUTO_TEST_CASE(first_and_third)
+{
+    printf("first_and_third test\n");
+    pthread_t t = pthread_self();
+    uint64_t mask = (1UL << 0) | (1UL << 2) ;
+    int ret = hogl::setaffinity(t, mask);
+    if (ret) {
+        printf("ret is %d %s\n", ret, strerror(errno));
+    }
+    BOOST_ASSERT(ret == 0);
+}
+
+BOOST_AUTO_TEST_CASE(cpuset_value)
+{
+    printf("cpuset_value test\n");
+    uint64_t mask = (1UL << 0) | (1UL << 2) ;
+    cpu_set_t cpuset;
+    CPU_ZERO(&cpuset);
+    cpuset = hogl::set_cpu_masks(cpuset, mask);
+    BOOST_REQUIRE(CPU_COUNT(&cpuset) == 2);
+    int v = CPU_ISSET(0, &cpuset);
+    BOOST_REQUIRE(v == 1);
+    v = CPU_ISSET(2, &cpuset);
+    BOOST_REQUIRE(v == 1);
+}
