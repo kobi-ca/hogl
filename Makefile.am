@@ -151,6 +151,7 @@ endif
 #
 if BUILD_TESTS
 TESTS = \
+	tests/affinity_test \
 	tests/args_test \
 	tests/area_test \
 	tests/mask_test \
@@ -181,6 +182,7 @@ AM_CXXFLAGS = -pthread
 AM_CFLAGS   = -pthread
 LDADD = src/libhogl.la $(HOGL_LIBS) $(BOOST_LDFLAGS) -lboost_regex $(CODE_COVERAGE_LDFLAGS)
 
+tests_affinity_test_SOURCES  = tests/affinity_test.cc 
 tests_args_test_SOURCES  = tests/args_test.cc 
 tests_area_test_SOURCES  = tests/area_test.cc
 tests_mask_test_SOURCES  = tests/mask_test.cc

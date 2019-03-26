@@ -24,45 +24,49 @@
    OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include <stdint.h> // uint64_t
-#include <stdio.h> // stderr
-#include <sched.h>
-#include <unistd.h>
-#include <errno.h>
-#include <pthread.h>
+#include "hogl/detail/utils.hpp"
 
-#include <climits>
+#define BOOST_TEST_MODULE area_test 
+#include <boost/test/included/unit_test.hpp>
 
-#ifdef HOGL_DEBUG
-#define dprint(fmt, args...) fprintf(stderr, "hogl: " fmt "\n", ##args)
-#else
-#define dprint(a...)
-#endif
+namespace hogl {
+    cpu_set_t set_cpu_masks(cpu_set_t cpuset, uint64_t core_id_mask);
+}
 
-namespace hogl
+BOOST_AUTO_TEST_CASE(all_zero)
 {
-
-cpu_set_t set_cpu_masks(cpu_set_t cpuset, uint64_t core_id_mask) {
-   dprint("hogl::setaffinity core mask %lu", core_id_mask);
-   int bit = sizeof(core_id_mask) * CHAR_BIT - 1;
-   while (bit >= 0) {
-      if (core_id_mask & (1ULL << bit)) {
-         dprint("hogl::setaffinity core id is %d", bit);
-         CPU_SET(bit, &cpuset);
-      }
-      --bit;
-   }
-   return cpuset;
+    printf("all_zero test\n");
+    pthread_t t = pthread_self();
+    uint64_t mask = 0;
+    int ret = hogl::setaffinity(t, mask);
+    if (ret) {
+        printf("ret is %d %s\n", ret, strerror(errno));
+    }
+    BOOST_ASSERT(ret == 0);
 }
 
-int setaffinity(pthread_t thread_id, uint64_t core_id_mask) {
-   cpu_set_t cpuset;
-   CPU_ZERO(&cpuset);
-   cpuset = set_cpu_masks(cpuset, core_id_mask);
-   if (CPU_COUNT(&cpuset)) {
-      return pthread_setaffinity_np(thread_id, sizeof(cpu_set_t), &cpuset);
-   }
-   return 0;
+BOOST_AUTO_TEST_CASE(first_and_third)
+{
+    printf("first_and_third test\n");
+    pthread_t t = pthread_self();
+    uint64_t mask = (1ULL << 0) | (1ULL << 2) ;
+    int ret = hogl::setaffinity(t, mask);
+    if (ret) {
+        printf("ret is %d %s\n", ret, strerror(errno));
+    }
+    BOOST_ASSERT(ret == 0);
 }
 
-} // ns hogl
+BOOST_AUTO_TEST_CASE(cpuset_value)
+{
+    printf("cpuset_value test\n");
+    uint64_t mask = (1ULL << 0) | (1ULL << 2) ;
+    cpu_set_t cpuset;
+    CPU_ZERO(&cpuset);
+    cpuset = hogl::set_cpu_masks(cpuset, mask);
+    BOOST_REQUIRE(CPU_COUNT(&cpuset) == 2);
+    int v = CPU_ISSET(0, &cpuset);
+    BOOST_REQUIRE(v == 1);
+    v = CPU_ISSET(2, &cpuset);
+    BOOST_REQUIRE(v == 1);
+}

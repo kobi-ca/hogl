@@ -24,11 +24,14 @@
    OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
+#include <stdint.h> // uint64_t
+#include <pthread.h>
+
 namespace hogl
 {
     
 // return non-zero on error
 // core_id < 0 would not do anything and just return 0
-int setaffinity(pthread_t thread_id, int core_id);
+int setaffinity(pthread_t thread_id, uint64_t core_id_mask);
 
 } // hogl
