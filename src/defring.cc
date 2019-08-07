@@ -40,7 +40,7 @@ ringbuf::options default_ring_options = {
 	.capacity = 2048,
 	.prio = 0,
 	.flags = ringbuf::SHARED | ringbuf::IMMORTAL,
-	.record_tailroom = 80
+	.record_tailroom = 800
 };
 
 } // namespace hogl
