@@ -8,8 +8,8 @@ AM_INIT_AUTOMAKE([silent-rules subdir-objects])
 AM_SILENT_RULES([yes])
 
 dnl Checks for programs.
-AC_PROG_CC([/usr/bin/gcc /opt/rh/devtoolset-7/root/usr/bin/gcc])
-AC_PROG_CXX([/usr/bin/g++ /opt/rh/devtoolset-7/root/usr/bin/g++])
+AC_PROG_CC
+AC_PROG_CXX
 AC_PROG_INSTALL
 AC_PROG_LIBTOOL
 
