@@ -29,10 +29,6 @@
 #define BOOST_TEST_MODULE area_test 
 #include <boost/test/included/unit_test.hpp>
 
-namespace hogl {
-    cpu_set_t set_cpu_masks(cpu_set_t cpuset, uint64_t core_id_mask);
-}
-
 BOOST_AUTO_TEST_CASE(all_zero)
 {
     printf("all_zero test\n");
